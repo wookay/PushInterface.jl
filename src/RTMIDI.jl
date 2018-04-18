@@ -16,10 +16,6 @@ struct RtMidiWrapper
 end
 const RtMidiPtr = Ref{RtMidiWrapper}
 
-function rtmidi_in_create_default()::RtMidiPtr
-    ccall((:rtmidi_in_create_default, rtmidi_lib), RtMidiPtr, ())
-end
-
 function rtmidi_sizeof_rtmidi_api()::Int
     Int(ccall((:rtmidi_sizeof_rtmidi_api, rtmidi_lib), Cint, ()))
 end
@@ -34,6 +30,16 @@ end
 
 function rtmidi_open_port(device::RtMidiPtr, portNumber, portName)
     ccall((:rtmidi_open_port, rtmidi_lib), Cvoid, (RtMidiPtr, Cuint, Cstring), device, portNumber, portName)
+end
+
+function destroy(device::RtMidiPtr)
+   ccall((:rtmidi_close_port, rtmidi_lib), Cvoid, (RtMidiPtr,), device)
+end
+
+### in
+
+function rtmidi_in_create_default()::RtMidiPtr
+    ccall((:rtmidi_in_create_default, rtmidi_lib), RtMidiPtr, ())
 end
 
 function rtmidi_in_get_message(device::RtMidiPtr, message, size)
@@ -58,8 +64,14 @@ function cb_func(timeStamp::Cdouble, message::Ptr{Cuchar}, ptr::Ptr{EventCB})::C
     nothing
 end
 
-function destroy(device::RtMidiPtr)
-   ccall((:rtmidi_close_port, rtmidi_lib), Cvoid, (RtMidiPtr,), device)
+### out
+
+function rtmidi_out_create_default()::RtMidiPtr
+    ccall((:rtmidi_out_create_default, rtmidi_lib), RtMidiPtr, ())
+end
+
+function rtmidi_out_send_message(device::RtMidiPtr, message, length)
+    ccall((:rtmidi_out_send_message, rtmidi_lib), Cint, (RtMidiPtr, Ptr{Cuchar}, Cint), device, message, length)
 end
 
 end # module PushInterface.RTMIDI
