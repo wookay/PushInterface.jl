@@ -4,8 +4,10 @@ module PushInterface
 
 export MIDIInterface, DisplayInterface
 
-include("MIDIInterface.jl")
-include("DisplayInterface.jl")
 include("RTMIDI.jl")
+include("MIDIInterface.jl")
+
+include("LIBUSB.jl")
+include("DisplayInterface.jl")
 
 end # module
