@@ -50,13 +50,17 @@ function rtmidi_in_set_callback(device::RtMidiPtr, callback, data)
     ccall((:rtmidi_in_set_callback, librtmidi), Cvoid, (RtMidiPtr, Ptr{Cvoid}, Ptr{Cvoid}), device, callback, data)
 end
 
+function rtmidi_in_cancel_callback(device::RtMidiPtr)
+    ccall((:rtmidi_in_cancel_callback, librtmidi), Cvoid, (RtMidiPtr,), device)
+end
+
 struct EventCB
     handle::Ptr{Cvoid}
     timeStamp::Cdouble
     message::Ptr{Cuchar}
 end
 
-function cb_func(timeStamp::Cdouble, message::Ptr{Cuchar}, ptr::Ptr{EventCB})::Cvoid
+function rtmidi_callback_func(timeStamp::Cdouble, message::Ptr{Cuchar}, ptr::Ptr{EventCB})::Cvoid
     handle = unsafe_load(ptr, 1).handle
     val = EventCB(handle, timeStamp, message)
     unsafe_store!(ptr, val, 1)

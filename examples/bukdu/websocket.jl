@@ -98,12 +98,12 @@ end # module ExampleWebSocket
 
 import PushInterface: RTMIDI
 import .RTMIDI: rtmidi_in_create_default, rtmidi_open_port, rtmidi_in_set_callback
-import .RTMIDI: destroy, EventCB, cb_func
+import .RTMIDI: destroy, EventCB, rtmidi_callback_func
 
 device = rtmidi_in_create_default()
 rtmidi_open_port(device, 1, "Ableton Push 2 User Port")
 
-cb_ptr = @cfunction cb_func Cvoid (Cdouble, Ptr{Cuchar}, Ptr{EventCB})
+cb_ptr = @cfunction rtmidi_callback_func Cvoid (Cdouble, Ptr{Cuchar}, Ptr{EventCB})
 cond = Base.AsyncCondition()
 handle = Base.unsafe_convert(Ptr{Cvoid}, cond)
 ecb = EventCB(handle, 0, C_NULL)
@@ -126,8 +126,13 @@ Bukdu.start(ServerPort, host=ServerHost)
 
 function midi_callback(msg)
     if 0x90 == first(msg)
-        ws = first(Bukdu.websockets())
-        write(ws, repr(msg))
+        websocks = Bukdu.websockets()
+        if isempty(websocks)
+            @info "visit the url"
+        else
+            ws = first(websocks)
+            write(ws, repr(msg))
+        end
     end
 end
 

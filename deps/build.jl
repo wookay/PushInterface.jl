@@ -35,4 +35,5 @@ provides(SimpleBuild,
         end
     end), libusb, os = :Unix)
 
-@BinDeps.install Dict(:librtmidi => :librtmidi, :libusb => :libusb)
+@BinDeps.install Dict(:librtmidi => :librtmidi,
+                      :libusb => :libusb)
