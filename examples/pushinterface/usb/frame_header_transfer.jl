@@ -10,6 +10,10 @@ ctx = Ptr{LibusbContext}(C_NULL)
 init_result = libusb_init(Ptr{Ptr{LibusbContext}}(ctx))
 libusb_set_debug(ctx, LIBUSB_LOG_LEVEL_DEBUG)
 device_handle = libusb_open_device_with_vid_pid(ctx, ABLETON_VENDOR_ID, PUSH2_PRODUCT_ID)
+if C_NULL == device_handle
+    @error :libusb_open_device_with_vid_pid "could not found ableton push 2"
+    exit(1)
+end
 device = libusb_get_device(device_handle)
 descriptor = Ref{Ptr{LibusbDeviceDescriptor}}()
 libusb_get_device_descriptor(device, descriptor)
@@ -47,7 +51,7 @@ const TRANSFER_TIMEOUT  = Cuint(1000) # milliseconds
 
 function libusb_transfer_cb(transfer::Ptr{LibusbTransfer})
     t = unsafe_load(transfer)
-    @info :libusb_transfer_cb t.callback t.user_data
+    @info :libusb_transfer_cb t.status t.callback t.user_data
 end
 on_frame_header_transfer_finished = @cfunction libusb_transfer_cb Cvoid (Ptr{LibusbTransfer},)
 

@@ -33,8 +33,8 @@ struct LibusbDeviceDescriptor
 end
 
 const LibusbTransferStatus = Cint # enum
-# 0 LIBUSB_TRANSFER_COMPLETED
-# 1 LIBUSB_TRANSFER_ERROR
+const LIBUSB_TRANSFER_COMPLETED = 0
+# 1 LIBUSB_TRANSFER_ERRO
 # 2 LIBUSB_TRANSFER_TIMED_OUT
 # 3 LIBUSB_TRANSFER_CANCELLED
 # 4 LIBUSB_TRANSFER_STALL
@@ -70,6 +70,11 @@ mutable struct LibusbTransfer
     buffer::Ptr{Cuchar} # Data buffer
     num_iso_packets::Cint # Number of isochronous packets. Only used for I/O with isochronous endpoints.
     iso_packet_desc::LibusbIsoPacketDescriptor # Isochronous packet descriptors, for isochronous transfers only.
+end
+
+struct Ctimeval
+    tv_sec::Clong
+    tv_usec::Clong
 end
 
 # int LIBUSB_CALL libusb_init(libusb_context **ctx)
@@ -128,6 +133,16 @@ function libusb_close(dev_handle::Ptr{LibusbDeviceHandle})
     ccall((:libusb_close, libusb), Cvoid, (Ptr{LibusbDeviceHandle},), dev_handle)
 end
 
+# void LIBUSB_CALL libusb_exit(libusb_context *ctx)
+function libusb_exit(ctx::Ptr{LibusbContext})
+    ccall((:libusb_exit, libusb), Cvoid, (Ptr{LibusbContext},), ctx)
+end
+
+# int LIBUSB_CALL libusb_reset_device(libusb_device_handle *dev_handle)
+function libusb_reset_device(dev_handle::Ptr{LibusbDeviceHandle})
+    ccall((:libusb_reset_device, libusb), Cint, (Ptr{LibusbDeviceHandle},), dev_handle)
+end
+
 # int LIBUSB_CALL libusb_get_device_descriptor(libusb_device *dev, struct libusb_device_descriptor *desc)
 function libusb_get_device_descriptor(dev::Ptr{LibusbDevice}, desc::Ref{Ptr{LibusbDeviceDescriptor}})
     ccall((:libusb_get_device_descriptor, libusb), Cint, (Ptr{LibusbDevice}, Ptr{Ptr{LibusbDeviceDescriptor}}), dev, desc)
@@ -156,6 +171,11 @@ end
 # int LIBUSB_CALL libusb_handle_events_completed(libusb_context *ctx, int *completed);
 function libusb_handle_events_completed(ctx::Ptr{LibusbContext}, completed::Ptr{Cint})
     ccall((:libusb_handle_events_completed, libusb), Cint, (Ptr{LibusbContext}, Ptr{Cint}), ctx, completed)
+end
+
+# int API_EXPORTED libusb_handle_events_timeout_completed(libusb_context *ctx, struct timeval *tv, int *completed)
+function libusb_handle_events_timeout_completed(ctx::Ptr{LibusbContext}, tv::Ref{Ctimeval}, completed::Ptr{Cint})
+    ccall((:libusb_handle_events_timeout_completed, libusb), Cint, (Ptr{LibusbContext}, Ptr{Ctimeval}, Ptr{Cint}), ctx, tv, completed)
 end
 
 const LIBUSB_TRANSFER_TYPE_BULK = Cuchar(2)

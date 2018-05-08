@@ -102,6 +102,10 @@ import .RTMIDI: destroy, EventCB, rtmidi_callback_func
 
 device = rtmidi_in_create_default()
 rtmidi_open_port(device, 1, "Ableton Push 2 User Port")
+if !(device[].ok)
+    @error :rtmidi_open_port "could not found ableton push 2"
+    exit(1)
+end
 
 cb_ptr = @cfunction rtmidi_callback_func Cvoid (Cdouble, Ptr{Cuchar}, Ptr{EventCB})
 cond = Base.AsyncCondition()

@@ -1,0 +1,36 @@
+module pushinterface_displayinterface_test_framebuffer
+
+using Test
+
+import PushInterface: DisplayInterface
+import .DisplayInterface: rgb_to_pixel
+
+@test rgb_to_pixel(1, 0xff, 0xff, 0xff, 0x00) == (0x18, 0xf4)
+@test rgb_to_pixel(2, 0xff, 0xff, 0xff, 0x00) == (0x18, 0xf8)
+
+@test rgb_to_pixel(1, 0xff, 0xd0, 0x02, 0x1b) == (0xfd, 0xeb)
+@test rgb_to_pixel(2, 0xff, 0xd0, 0x02, 0x1b) == (0xfd, 0xe7)
+@test rgb_to_pixel(3, 0xff, 0xff, 0xff, 0x00) == (0x18, 0xf4)
+@test rgb_to_pixel(4, 0xff, 0xff, 0xff, 0x00) == (0x18, 0xf8)
+
+
+import .DisplayInterface: Canvas, fill!, draw!
+import .DisplayInterface: framebuffer
+import Colors: @colorant_str
+using Pkg
+
+buf = reshape(read(joinpath(@__DIR__, "sample.bytes")), (20480, 16))
+expected = vec(buf')
+
+path = joinpath(@__DIR__, "line.png")
+canvas = Canvas()
+fill!(canvas, colorant"yellow") # @colorant_str
+draw!(canvas, path)
+
+a = framebuffer(canvas)
+@test expected[1:16]             == UInt8[0xfd, 0xeb, 0xfd, 0xe7, 0x18, 0xf4, 0x18, 0xf8, 0x18, 0xf4, 0xfd, 0xe7, 0xfd, 0xeb, 0x18, 0xf8]
+@test expected[16+1:16+16]       == UInt8[0x18, 0xf4, 0x18, 0xf8, 0x18, 0xf4, 0x18, 0xf8, 0x18, 0xf4, 0x18, 0xf8, 0x18, 0xf4, 0x18, 0xf8]
+@test expected[2048+1 : 2048+16] == a[2048+1 : 2048+16]
+@test expected                   == a
+
+end # module pushinterface_displayinterface_test_framebuffer
