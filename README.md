@@ -14,6 +14,8 @@ PushInterface.jl 🎛  for Ableton Push 2 (https://github.com/Ableton/push-inter
 * [Juno IDE](http://junolab.org/) workspace
   - [juno/workspace.jl](https://github.com/wookay/PushInterface.jl/blob/master/examples/juno/workspace.jl)
 
+* Rotating Cube in Blender with [BlenderPlot.jl](https://github.com/wookay/BlenderPlot.jl)
+  - [blenderplot/osc.jl](https://github.com/wookay/PushInterface.jl/blob/master/examples/blenderplot/osc.jl)
 
 
 ## Requirements
