@@ -1,6 +1,6 @@
 # PushInterface.jl
 
-PushInterface.jl 🎛  for Ableton Push 2 (https://github.com/Ableton/push-interface)
+It's a Julia (https://julialang.org) library for Ableton Push 2 (https://github.com/Ableton/push-interface).
 
 
 ### Examples
@@ -11,10 +11,10 @@ PushInterface.jl 🎛  for Ableton Push 2 (https://github.com/Ableton/push-inter
 * Insertion data with [Octo.jl](https://github.com/wookay/Octo.jl)
   - [octo/employee.jl](https://github.com/wookay/PushInterface.jl/blob/master/examples/octo/employee.jl)
 
-* [Juno IDE](http://junolab.org/) workspace
+* Juno IDE (http://junolab.org/) workspace
   - [juno/workspace.jl](https://github.com/wookay/PushInterface.jl/blob/master/examples/juno/workspace.jl)
 
-* Rotating Cube in Blender with [BlenderPlot.jl](https://github.com/wookay/BlenderPlot.jl)
+* Rotating a Cube in Blender (https://www.blender.org/) with [BlenderPlot.jl](https://github.com/wookay/BlenderPlot.jl)
   - [blenderplot/osc.jl](https://github.com/wookay/PushInterface.jl/blob/master/examples/blenderplot/osc.jl)
 
 
