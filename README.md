@@ -20,10 +20,11 @@ It's a Julia (https://julialang.org) library for Ableton Push 2 (https://github.
 
 ## Requirements
 
-You need latest [Julia 0.7 alpha](https://julialang.org/downloads/nightlies.html).
+You need latest [Julia 0.7 beta](https://julialang.org/downloads/nightlies.html).
 
 `julia>` type `]` key
 
 ```julia
+(v0.7) pkg> add Cairo#master
 (v0.7) pkg> add https://github.com/wookay/PushInterface.jl.git#master
 ```
